@@ -73,11 +73,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow:
-    0 0 20px var(--agui-nucleus-glow),
-    0 4px 16px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease;
   z-index: 10;
   pointer-events: auto;
 }
@@ -88,17 +84,10 @@
 
 .agui-nucleus:hover {
   transform: translate(-50%, -50%) scale(1.1);
-  box-shadow:
-    0 0 30px var(--agui-nucleus-glow),
-    0 6px 24px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .agui-nucleus--open {
   background: var(--agui-nucleus-open-bg);
-  box-shadow:
-    0 0 15px var(--agui-nucleus-open-glow),
-    0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .agui-nucleus-badge {
