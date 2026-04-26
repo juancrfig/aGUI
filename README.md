@@ -3,6 +3,22 @@
 > A dashboard plugin/theme for the Hermes Agent web dashboard.
 > Built for the Hermes Dashboard Hackathon (April 2026).
 
+## Vision
+
+**"The agent that grows with you"** — this is Hermes' core principle. aGUI extends that principle to the dashboard itself.
+
+Instead of presenting every capability upfront and overwhelming newcomers, aGUI starts minimal and evolves based on user behavior and agent reasoning. The interface adapts to each person's unique needs, priorities, and usage patterns.
+
+## Design Philosophy: Bottom-Up Emergence
+
+We do not enforce a final interface design. The GUI emerges through use:
+- User behavior shapes what appears
+- Agent reasoning helps surface relevant capabilities
+- The layout adapts to individual workflows
+- Users control their workspace — rearrange, resize, close, trash widgets
+
+This is inspired by sci-fi command centers (Jarvis in Iron Man) where interface elements appear, move, and disappear dynamically based on context and intent.
+
 ## Repository Structure
 
 ```
