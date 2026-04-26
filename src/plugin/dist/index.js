@@ -393,6 +393,19 @@
       localStorage.setItem('agui-state', JSON.stringify(state));
     }, [electrons, satellites, position]);
 
+    // Click outside to close atom
+    useEffect(() => {
+      if (!isOpen) return;
+      const handleClickOutside = (e) => {
+        if (clusterRef.current && !clusterRef.current.contains(e.target)) {
+          setIsOpen(false);
+          setShowChat(false);
+        }
+      };
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [isOpen]);
+
     // Position cluster at bottom-right by default
     useEffect(() => {
       if (!position.x && !position.y) {
