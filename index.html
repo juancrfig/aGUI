@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>aGUI Dev Server</title>
+  <style>
+    body {
+      margin: 0;
+      background: #0a1a1a;
+      color: #ffe6cb;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      min-height: 100vh;
+    }
+    #root {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+  <!-- Mock Hermes SDK -->
+  <script>
+    window.__HERMES_PLUGIN_SDK__ = {
+      React: {
+        createElement: function(type, props, ...children) {
+          if (typeof type === 'function') {
+            return type(props);
+          }
+          const el = document.createElement(type);
+          if (props) {
+            Object.keys(props).forEach(k => {
+              if (k === 'className') el.className = props[k];
+              else if (k === 'style' && typeof props[k] === 'object') Object.assign(el.style, props[k]);
+              else if (k.startsWith('on')) el.addEventListener(k.slice(2).toLowerCase(), props[k]);
+              else if (k === 'ref') { /* ignore */ }
+              else if (k === 'dangerouslySetInnerHTML') el.innerHTML = props[k].__html;
+              else if (k === 'key') { /* ignore */ }
+              else el.setAttribute(k, props[k]);
+            });
+          }
+          children.flat().filter(Boolean).forEach(child => {
+            if (typeof child === 'string' || typeof child === 'number') {
+              el.appendChild(document.createTextNode(child));
+            } else if (child instanceof Node) {
+              el.appendChild(child);
+            }
+          });
+          return el;
+        },
+        useState: function(initial) {
+          let state = initial;
+          const setState = (newState) => { state = newState; };
+          return [state, setState];
+        },
+        useEffect: function() {},
+        useCallback: function(fn) { return fn; },
+        useRef: function(initial) { return { current: initial }; },
+        useMemo: function(fn) { return fn(); },
+      },
+      hooks: {
+        useState: function(initial) {
+          let state = initial;
+          const setState = (newState) => { state = newState; };
+          return [state, setState];
+        },
+        useEffect: function() {},
+        useCallback: function(fn) { return fn; },
+        useRef: function(initial) { return { current: initial }; },
+        useMemo: function(fn) { return fn(); },
+      },
+      components: {
+        Button: function(props) {
+          const btn = document.createElement('button');
+          Object.assign(btn, props);
+          return btn;
+        },
+        Input: function(props) {
+          const input = document.createElement('input');
+          Object.assign(input, props);
+          return input;
+        },
+        Badge: function(props) {
+          const span = document.createElement('span');
+          span.textContent = props.children;
+          return span;
+        },
+      },
+      utils: {
+        cn: function(...classes) { return classes.filter(Boolean).join(' '); },
+      },
+      fetchJSON: async function(url, options) {
+        const res = await fetch(url, options);
+        return res.json();
+      },
+    };
+    window.__HERMES_PLUGINS__ = {
+      register: function(name, component) {
+        console.log('[Hermes Mock] Plugin registered:', name);
+        // Render to a mock container
+        const root = document.getElementById('root');
+        if (root && typeof component === 'function') {
+          const el = component();
+          if (el instanceof Node) root.appendChild(el);
+        }
+      }
+    };
+    window.__HERMES_DASHBOARD__ = {
+      navigate: function(path) { console.log('[Hermes Mock] Navigate to:', path); },
+    };
+  </script>
+  <link rel="stylesheet" href="/dist/style.css">
+</head>
+<body>
+  <div id="root"></div>
+  <script src="/dist/index.js"></script>
+</body>
+</html>
