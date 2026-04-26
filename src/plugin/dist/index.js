@@ -371,15 +371,24 @@
       };
     }, []);
 
-    // Load saved state from localStorage
+    // Load saved state from localStorage (invalidate if version mismatch)
     useEffect(() => {
       try {
         const saved = localStorage.getItem('agui-state');
-        if (saved) {
+        const savedVersion = localStorage.getItem('agui-version');
+        if (saved && savedVersion === '1.1.1') {
           const state = JSON.parse(saved);
           if (state.electrons) setElectrons(state.electrons);
           if (state.satellites) setSatellites(state.satellites);
           if (state.position) setPosition(state.position);
+        } else {
+          // Version mismatch or first run — use fresh seed electrons
+          localStorage.setItem('agui-version', '1.1.1');
+          localStorage.setItem('agui-state', JSON.stringify({
+            electrons: SEED_ELECTRONS,
+            satellites: [],
+            position: {}
+          }));
         }
       } catch (e) {
         console.warn('[aGUI] Failed to load state', e);
@@ -390,6 +399,7 @@
     useEffect(() => {
       const state = { electrons, satellites, position };
       localStorage.setItem('agui-state', JSON.stringify(state));
+      localStorage.setItem('agui-version', '1.1.1');
     }, [electrons, satellites, position]);
 
     // Click outside to close atom (ignore clicks on electrons/trash/chat)

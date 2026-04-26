@@ -3,13 +3,13 @@
   "label": "aGUI",
   "description": "Adaptive GUI — an atom-inspired floating cluster interface that grows with you",
   "icon": "Zap",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "tab": {
     "path": "/agui",
     "position": "after:home"
   },
   "slots": [],
-  "entry": "dist/index.js?v=1.1.1",
-  "css": "dist/style.css?v=1.1.1",
+  "entry": "dist/index.js?v=1.1.2",
+  "css": "dist/style.css?v=1.1.2",
   "api": "plugin_api.py"
 }
