@@ -104,4 +104,4 @@ Themes are YAML files in `~/.hermes/dashboard-themes/`. They control palette, ty
 
 ## Next Session Note
 
-When a new session starts, the first task is to **grill the user** (using the `grill-me` skill) to discover the exact idea for aGUI. The project idea is not yet defined — it must be extracted through relentless interviewing, walking down each branch of the design tree until a shared understanding is reached. Do NOT assume the idea. Ask one question at a time.
+Design phase is complete. See `NEXT_SESSION.md` for open questions and implementation order. When a new session starts, resolve any remaining open questions quickly (not more than 1-2 minutes) then proceed directly to implementation.

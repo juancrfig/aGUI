@@ -49,7 +49,7 @@ How does the "+" button chat session work?
 ### 2. Taskbar Visual Style
 - **DECIDED: Option C — Floating cluster (sci-fi atom style)**
 - Closed state: Single bolt button (Lucide `Zap` icon)
-- Opened state: Electrons orbit nucleus with smooth animation
+- Opened state: Electrons in concentric rings around nucleus
 - Overflow behavior: When >7 electrons, least-used items promoted to "Satellites" (draggable floating widgets)
 - Demotion: Drag Satellite close to nucleus to return it to electron orbit
 - Reference images: `screenshots/cluster-closed.png`, `screenshots/cluster-opened.png`
@@ -67,6 +67,13 @@ How does the "+" button chat session work?
   - No orbit path lines drawn
   - New electron added while open: smooth "push aside" animation, luxury/modern feel
   - Electrons arranged in concentric rings around nucleus (not scattered randomly)
+
+### 5. Color Palette
+- **DECIDED: Inherit from active dashboard theme**
+- Default: Hermes Teal (`#041c1c` background, `#ffe6cb` midground)
+- Use CSS custom properties (`--background-base`, `--warm-glow`, `--primary`, etc.)
+- Semantic aGUI variables (e.g., `--agui-nucleus-glow`) default to theme vars
+- User theme switching works out of the box (6 built-in themes + custom YAML)
 
 ---
 
