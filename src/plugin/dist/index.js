@@ -1,9 +1,17 @@
 /**
  * aGUI Plugin — Atom-inspired floating cluster interface
  * Single IIFE bundle. Uses window.__HERMES_PLUGIN_SDK__ (React, hooks, components)
+ * BUILD: 2026-04-26-v2
  */
 (function () {
   'use strict';
+
+  // Cache-bust: if this is stale code, force reload
+  if (window.__AGUI_LOADED__) {
+    console.log('[aGUI] Already loaded, skipping duplicate');
+    return;
+  }
+  window.__AGUI_LOADED__ = '2026-04-26-v2';
 
   // ---------------------------------------------------------------------------
   // SDK Access
@@ -383,14 +391,14 @@
       try {
         const saved = localStorage.getItem('agui-state');
         const savedVersion = localStorage.getItem('agui-version');
-        if (saved && savedVersion === '1.1.4') {
+        if (saved && savedVersion === '2026-04-26-v2') {
           const state = JSON.parse(saved);
           if (state.electrons) setElectrons(state.electrons);
           if (state.satellites) setSatellites(state.satellites);
           if (state.position) setPosition(state.position);
         } else {
           // Version mismatch or first run — use fresh seed electrons
-          localStorage.setItem('agui-version', '1.1.4');
+          localStorage.setItem('agui-version', '2026-04-26-v2');
           localStorage.setItem('agui-state', JSON.stringify({
             electrons: SEED_ELECTRONS,
             satellites: [],
@@ -406,7 +414,7 @@
     useEffect(() => {
       const state = { electrons, satellites, position };
       localStorage.setItem('agui-state', JSON.stringify(state));
-      localStorage.setItem('agui-version', '1.1.4');
+      localStorage.setItem('agui-version', '2026-04-26-v2');
     }, [electrons, satellites, position]);
 
     // Click outside to close atom (ignore clicks on electrons/trash/chat)

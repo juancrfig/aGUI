@@ -9,7 +9,7 @@
     "position": "after:home"
   },
   "slots": [],
-  "entry": "dist/index.js?v=1.1.4",
-  "css": "dist/style.css?v=1.1.4",
+  "entry": "dist/index.js",
+  "css": "dist/style.css",
   "api": "plugin_api.py"
 }
