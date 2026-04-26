@@ -1,7 +1,7 @@
 # aGUI — Next Session Checklist
 
 **Date:** 2026-04-25
-**Status:** Design phase complete. Ready for implementation.
+**Status:** All open questions resolved. Implementation ready.
 **Time remaining:** ~4 hours until hackathon deadline
 
 ---
@@ -47,23 +47,26 @@ How does the "+" button chat session work?
 - **Option C:** Hybrid — persistent session but auto-compacts old messages
 
 ### 2. Taskbar Visual Style
-- **Option A:** Horizontal bar at bottom (Windows-style)
-- **Option B:** Vertical bar at left (macOS Dock-style)
-- **Option C:** Floating cluster (sci-fi style) ← Juanes seemed interested
-- **Option D:** Something else entirely
+- **DECIDED: Option C — Floating cluster (sci-fi atom style)**
+- Closed state: Single bolt button (Lucide `Zap` icon)
+- Opened state: Electrons orbit nucleus with smooth animation
+- Overflow behavior: When >7 electrons, least-used items promoted to "Satellites" (draggable floating widgets)
+- Demotion: Drag Satellite close to nucleus to return it to electron orbit
+- Reference images: `screenshots/cluster-closed.png`, `screenshots/cluster-opened.png`
 
 ### 3. Notification Triggers (MVP)
-Which real Hermes events to wire up?
-- Task completion
-- Cron job finished
-- New skill/tool/MCP installed
-- Errors
-- Others?
+- **DECIDED: Task completion + Errors**
+- Leverages existing Hermes backend events that are already traceable
+- Notification trail (dynamic island) shows real Hermes events
+- Other events (cron, skills) can be added post-hackathon
 
 ### 4. Button Animation Specifics
-- What exact animation? (bounce, pulse, glow, slide, particles, ripple)
-- How long does the loop last? Forever? Timeout?
-- Does clicked state have a different animation?
+- **DECIDED:**
+  - No constant orbiting — electrons appear with smooth entrance animation when cluster opens, then settle into fixed positions
+  - Subtle initial movement for smoothness, then static
+  - No orbit path lines drawn
+  - New electron added while open: smooth "push aside" animation, luxury/modern feel
+  - Electrons arranged in concentric rings around nucleus (not scattered randomly)
 
 ---
 
