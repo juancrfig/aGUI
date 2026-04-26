@@ -73,17 +73,13 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, background 0.3s ease;
   z-index: 10;
   pointer-events: auto;
 }
 
 .agui-nucleus * {
   pointer-events: none;
-}
-
-.agui-nucleus:hover {
-  transform: translate(-50%, -50%) scale(1.1);
 }
 
 .agui-nucleus--open {
@@ -367,9 +363,7 @@
 }
 
 .agui-plus-btn:hover {
-  background: var(--agui-nucleus-bg);
-  border-color: var(--agui-nucleus-bg);
-  box-shadow: 0 0 16px var(--agui-nucleus-glow);
+  transform: scale(1.1);
 }
 
 /* ---------------------------------------------------------------------------
