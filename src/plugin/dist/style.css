@@ -1,0 +1,527 @@
+/**
+ * aGUI Styles — Sci-fi atom cluster interface
+ * Uses CSS custom properties from the active dashboard theme
+ */
+
+/* ---------------------------------------------------------------------------
+   Root & Variables
+   --------------------------------------------------------------------------- */
+.agui-root {
+  --agui-nucleus-bg: var(--primary, #0d9488);
+  --agui-nucleus-glow: var(--primary-glow, rgba(13, 148, 136, 0.4));
+  --agui-electron-bg: var(--card, #134e4a);
+  --agui-electron-glow: var(--warm-glow, rgba(255, 230, 203, 0.15));
+  --agui-text: var(--foreground, #ffe6cb);
+  --agui-text-muted: var(--muted-foreground, #94a3b8);
+  --agui-border: var(--border, rgba(255, 230, 203, 0.1));
+  --agui-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --agui-glass: rgba(4, 28, 28, 0.75);
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.agui-root * {
+  pointer-events: auto;
+}
+
+/* ---------------------------------------------------------------------------
+   Cluster Container
+   --------------------------------------------------------------------------- */
+.agui-cluster {
+  position: absolute;
+  width: var(--nucleus-size, 56px);
+  height: var(--nucleus-size, 56px);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: grab;
+}
+
+.agui-cluster:active {
+  cursor: grabbing;
+}
+
+.agui-cluster--open {
+  transform: scale(1);
+}
+
+/* ---------------------------------------------------------------------------
+   Nucleus (Center Bolt Button)
+   --------------------------------------------------------------------------- */
+.agui-nucleus {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: none;
+  background: var(--agui-nucleus-bg);
+  color: var(--agui-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow:
+    0 0 20px var(--agui-nucleus-glow),
+    0 4px 16px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.agui-nucleus:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+  box-shadow:
+    0 0 30px var(--agui-nucleus-glow),
+    0 6px 24px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.agui-nucleus--open {
+  background: var(--agui-electron-bg);
+  box-shadow:
+    0 0 15px rgba(255, 255, 255, 0.1),
+    0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.agui-nucleus-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: #ef4444;
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+  animation: agui-pulse 2s ease-in-out infinite;
+}
+
+@keyframes agui-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+/* ---------------------------------------------------------------------------
+   Electrons (Ring Items)
+   --------------------------------------------------------------------------- */
+.agui-electron {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -22px;
+  margin-top: -22px;
+  opacity: 0;
+  transform: translate(0, 0) scale(0.5);
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.agui-cluster--open .agui-electron {
+  opacity: 1;
+  transform: translate(var(--tx, 0), var(--ty, 0)) scale(1);
+}
+
+/* We use inline styles for positioning, but apply the transition via class */
+.agui-electron__btn {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid var(--agui-border);
+  background: var(--agui-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--agui-text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  cursor: pointer;
+  box-shadow:
+    0 0 12px var(--agui-electron-glow),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.agui-electron__btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.08), transparent 60%);
+  pointer-events: none;
+}
+
+.agui-electron__btn:hover {
+  transform: scale(1.15);
+  border-color: var(--agui-nucleus-bg);
+  box-shadow:
+    0 0 20px var(--agui-nucleus-glow),
+    0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.agui-electron__label {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  opacity: 0.9;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.agui-electron__remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 5;
+}
+
+.agui-electron:hover .agui-electron__remove {
+  opacity: 1;
+}
+
+/* New electron entrance animation */
+.agui-electron--new .agui-electron__btn {
+  animation: agui-electron-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes agui-electron-pop {
+  0% { transform: scale(0); }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* ---------------------------------------------------------------------------
+   Satellites (Overflow Draggable Widgets)
+   --------------------------------------------------------------------------- */
+.agui-satellite {
+  position: fixed;
+  z-index: 9998;
+  cursor: grab;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.agui-satellite--dragging {
+  cursor: grabbing;
+  z-index: 10000;
+  transform: scale(1.1);
+}
+
+.agui-satellite__btn {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--agui-border);
+  background: var(--agui-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--agui-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--agui-shadow);
+  transition: all 0.2s ease;
+}
+
+.agui-satellite__btn:hover {
+  border-color: var(--agui-nucleus-bg);
+  box-shadow: 0 0 20px var(--agui-nucleus-glow);
+}
+
+.agui-satellite__remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.agui-satellite:hover .agui-satellite__remove {
+  opacity: 1;
+}
+
+/* ---------------------------------------------------------------------------
+   Chat Input ("+" Button Expanded)
+   --------------------------------------------------------------------------- */
+.agui-chat-wrap {
+  position: absolute;
+  z-index: 9997;
+}
+
+.agui-chat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--agui-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--agui-border);
+  border-radius: 24px;
+  box-shadow: var(--agui-shadow);
+  animation: agui-chat-slide 0.3s ease;
+}
+
+@keyframes agui-chat-slide {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.agui-chat__input {
+  background: transparent !important;
+  border: none !important;
+  color: var(--agui-text) !important;
+  font-size: 14px;
+  width: 200px;
+  padding: 4px 8px;
+}
+
+.agui-chat__input::placeholder {
+  color: var(--agui-text-muted);
+}
+
+.agui-chat__input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.agui-chat__send {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--agui-nucleus-bg);
+  color: var(--agui-text);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.agui-chat__send:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 12px var(--agui-nucleus-glow);
+}
+
+.agui-plus-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--agui-glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--agui-border);
+  color: var(--agui-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.agui-plus-btn:hover {
+  background: var(--agui-nucleus-bg);
+  border-color: var(--agui-nucleus-bg);
+  box-shadow: 0 0 16px var(--agui-nucleus-glow);
+}
+
+/* ---------------------------------------------------------------------------
+   Notification Trail (Dynamic Island)
+   --------------------------------------------------------------------------- */
+.agui-notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  padding: 10px 18px;
+  border-radius: 24px;
+  background: var(--agui-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--agui-border);
+  box-shadow: var(--agui-shadow);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 10001;
+  opacity: 0;
+  pointer-events: auto;
+}
+
+.agui-notification--task_complete,
+.agui-notification--info {
+  border-color: rgba(13, 148, 136, 0.3);
+  box-shadow: 0 0 20px rgba(13, 148, 136, 0.15), var(--agui-shadow);
+}
+
+.agui-notification--error {
+  border-color: rgba(239, 68, 68, 0.3);
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.15), var(--agui-shadow);
+}
+
+.agui-notification--stacked {
+  padding-right: 14px;
+}
+
+/* Show state — applied when there are notifications */
+.agui-root:has(.agui-notification) .agui-notification {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* Use a simpler show approach via inline style, but keep CSS for hover */
+.agui-notification:hover {
+  transform: translateX(-50%) translateY(0) scale(1.02);
+}
+
+.agui-notification__icon {
+  flex-shrink: 0;
+}
+
+.agui-notification__text {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--agui-text);
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.agui-notification__count {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--agui-electron-bg);
+  color: var(--agui-text);
+}
+
+/* ---------------------------------------------------------------------------
+   Trash Zone
+   --------------------------------------------------------------------------- */
+.agui-trash {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 16px 32px;
+  border-radius: 16px;
+  background: rgba(239, 68, 68, 0.15);
+  backdrop-filter: blur(12px);
+  border: 2px dashed rgba(239, 68, 68, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #ef4444;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 9996;
+  animation: agui-trash-appear 0.3s ease;
+}
+
+@keyframes agui-trash-appear {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Icon Styling
+   --------------------------------------------------------------------------- */
+.agui-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.agui-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------------------------------------------------------------------------
+   Responsive
+   --------------------------------------------------------------------------- */
+@media (max-width: 640px) {
+  .agui-cluster {
+    --nucleus-size: 48px;
+  }
+
+  .agui-electron__label {
+    display: none;
+  }
+
+  .agui-chat__input {
+    width: 160px;
+  }
+
+  .agui-notification__text {
+    max-width: 200px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced Motion
+   --------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .agui-electron,
+  .agui-nucleus,
+  .agui-satellite,
+  .agui-notification,
+  .agui-chat {
+    transition: none !important;
+    animation: none !important;
+  }
+}
