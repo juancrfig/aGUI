@@ -335,16 +335,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--agui-nucleus-bg);
+  background: var(--agui-nucleus-open-bg);
+  border: 2px dashed var(--agui-border);
   color: var(--agui-text);
-  border: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: transform 0.2s ease;
 }
 
 .agui-chat__send:hover {
   transform: scale(1.1);
-  box-shadow: 0 0 12px var(--agui-nucleus-glow);
 }
 
 .agui-plus-btn {
