@@ -7,13 +7,13 @@
    Root & Variables
    --------------------------------------------------------------------------- */
 .agui-root {
-  --agui-nucleus-bg: var(--primary, #0d9488);
-  --agui-nucleus-glow: var(--primary-glow, rgba(13, 148, 136, 0.4));
-  --agui-electron-bg: var(--card, #134e4a);
-  --agui-electron-glow: var(--warm-glow, rgba(255, 230, 203, 0.15));
-  --agui-text: var(--foreground, #ffe6cb);
-  --agui-text-muted: var(--muted-foreground, #94a3b8);
-  --agui-border: var(--border, rgba(255, 230, 203, 0.1));
+  --agui-nucleus-bg: var(--color-primary, #0d9488);
+  --agui-nucleus-glow: var(--color-primary-glow, rgba(13, 148, 136, 0.4));
+  --agui-electron-bg: var(--color-card, #134e4a);
+  --agui-electron-glow: var(--color-warm-glow, rgba(255, 230, 203, 0.15));
+  --agui-text: var(--color-foreground, #ffe6cb);
+  --agui-text-muted: var(--color-muted-foreground, #94a3b8);
+  --agui-border: var(--color-border, rgba(255, 230, 203, 0.1));
   --agui-destructive: var(--color-destructive, #ef4444);
   --agui-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   --agui-glass: rgba(4, 28, 28, 0.75);
