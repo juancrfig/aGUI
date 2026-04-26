@@ -31,12 +31,11 @@
 
   // Pre-defined seed electrons (dashboard tabs)
   const SEED_ELECTRONS = [
-    { id: 'seed-sessions', label: 'Sessions', icon: 'MessageSquare', target: '/sessions', count: 0 },
-    { id: 'seed-cron', label: 'Cron', icon: 'Clock', target: '/cron', count: 0 },
-    { id: 'seed-skills', label: 'Skills', icon: 'Wrench', target: '/skills', count: 0 },
     { id: 'seed-config', label: 'Config', icon: 'Settings', target: '/config', count: 0 },
-    { id: 'seed-logs', label: 'Logs', icon: 'ScrollText', target: '/logs', count: 0 },
+    { id: 'seed-cron', label: 'Cron', icon: 'Clock', target: '/cron', count: 0 },
+    { id: 'seed-sessions', label: 'Sessions', icon: 'MessageSquare', target: '/sessions', count: 0 },
     { id: 'seed-analytics', label: 'Analytics', icon: 'BarChart3', target: '/analytics', count: 0 },
+    { id: 'seed-logs', label: 'Logs', icon: 'ScrollText', target: '/logs', count: 0 },
   ];
 
   // ---------------------------------------------------------------------------
@@ -160,8 +159,7 @@
         onClick: () => onClick(data),
         title: data.label,
       }, [
-        React.createElement(Icon, { key: 'icon', name: data.icon || 'Zap', size: 18 }),
-        React.createElement('span', { key: 'label', className: 'agui-electron__label' }, data.label),
+        React.createElement(Icon, { key: 'icon', name: data.icon || 'Zap', size: 20 }),
       ]),
       showRemove && React.createElement('button', {
         key: 'remove',
