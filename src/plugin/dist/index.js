@@ -38,6 +38,13 @@
     { id: 'seed-logs', label: 'Logs', icon: 'ScrollText', target: '/logs', count: 0 },
   ];
 
+  // DEBUG: Expose cache clear helper
+  window.__AGUI_CLEAR_CACHE__ = function() {
+    localStorage.removeItem('agui-state');
+    localStorage.removeItem('agui-version');
+    console.log('[aGUI] Cache cleared. Reload the page to get fresh state.');
+  };
+
   // ---------------------------------------------------------------------------
   // Utility: Compute electron positions in concentric rings
   // ---------------------------------------------------------------------------
@@ -708,9 +715,12 @@
     const link = document.createElement('link');
     link.id = 'agui-style';
     link.rel = 'stylesheet';
-    link.href = '/api/plugins/agui/dist/style.css?t=' + Date.now();
+    // Use a session-based timestamp so it refreshes once per page load
+    const t = window.__AGUI_CSS_TS__ || Date.now();
+    window.__AGUI_CSS_TS__ = t;
+    link.href = '/api/plugins/agui/dist/style.css?t=' + t;
     document.head.appendChild(link);
-    console.log('[aGUI] CSS refreshed with timestamp');
+    console.log('[aGUI] CSS refreshed with timestamp', t);
   })();
 
   const PLUGINS = window.__HERMES_PLUGINS__;
