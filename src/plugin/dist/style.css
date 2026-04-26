@@ -84,6 +84,7 @@
 
 .agui-nucleus--open {
   background: var(--agui-nucleus-open-bg);
+  border: 2px dashed var(--agui-border);
 }
 
 .agui-nucleus-badge {
