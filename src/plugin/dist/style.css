@@ -9,12 +9,15 @@
 .agui-root {
   --agui-nucleus-bg: var(--color-primary, #0d9488);
   --agui-nucleus-glow: var(--color-primary-glow, rgba(13, 148, 136, 0.4));
+  --agui-nucleus-open-bg: var(--color-secondary, #134e4a);
+  --agui-nucleus-open-glow: var(--color-secondary-glow, rgba(255, 255, 255, 0.1));
   --agui-electron-bg: var(--color-card, #134e4a);
   --agui-electron-glow: var(--color-warm-glow, rgba(255, 230, 203, 0.15));
   --agui-text: var(--color-foreground, #ffe6cb);
   --agui-text-muted: var(--color-muted-foreground, #94a3b8);
   --agui-border: var(--color-border, rgba(255, 230, 203, 0.1));
   --agui-destructive: var(--color-destructive, #ef4444);
+  --agui-trash-glow: var(--color-destructive-glow, rgba(251, 44, 54, 0.15));
   --agui-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   --agui-glass: rgba(4, 28, 28, 0.75);
 
@@ -92,9 +95,9 @@
 }
 
 .agui-nucleus--open {
-  background: var(--agui-electron-bg);
+  background: var(--agui-nucleus-open-bg);
   box-shadow:
-    0 0 15px rgba(255, 255, 255, 0.1),
+    0 0 15px var(--agui-nucleus-open-glow),
     0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
@@ -487,15 +490,17 @@
   pointer-events: auto;
 }
 
-/* Hover: slide up to fully reveal — keep dashed border */
+/* Hover: slide up to fully reveal — keep dashed border, add semantic shadow */
 .agui-trash:hover,
 .agui-trash:focus-within {
   bottom: 0;
+  box-shadow: 0 -4px 24px var(--agui-trash-glow);
 }
 
-/* Drag-over state: slide up, keep dashed border */
+/* Drag-over state: slide up, keep dashed border, stronger semantic shadow */
 .agui-trash--active {
   bottom: 0;
+  box-shadow: 0 -4px 32px var(--agui-trash-glow);
 }
 
 /* ---------------------------------------------------------------------------
