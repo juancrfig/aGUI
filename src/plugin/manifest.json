@@ -8,10 +8,7 @@
     "path": "/agui",
     "position": "after:home"
   },
-  "slots": [
-    "sessions:top",
-    "home:bottom"
-  ],
+  "slots": [],
   "entry": "dist/index.js",
   "css": "dist/style.css",
   "api": "plugin_api.py"

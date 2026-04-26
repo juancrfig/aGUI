@@ -26,7 +26,12 @@
   z-index: 9999;
 }
 
-.agui-root * {
+/* Only enable pointer events on interactive elements */
+.agui-root .agui-cluster,
+.agui-root .agui-satellite,
+.agui-root .agui-chat-wrap,
+.agui-root .agui-notification,
+.agui-root .agui-trash {
   pointer-events: auto;
 }
 
@@ -70,6 +75,11 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
   z-index: 10;
+  pointer-events: auto;
+}
+
+.agui-nucleus * {
+  pointer-events: none;
 }
 
 .agui-nucleus:hover {

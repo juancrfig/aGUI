@@ -97,12 +97,26 @@
   // Nucleus Component
   // ---------------------------------------------------------------------------
   function Nucleus({ isOpen, onClick, pendingCount }) {
+    const downTimeRef = useRef(0);
     return React.createElement('button', {
       className: cn(
         'agui-nucleus',
         isOpen && 'agui-nucleus--open'
       ),
-      onClick,
+      onPointerDown: (e) => {
+        downTimeRef.current = Date.now();
+        e.target.setPointerCapture(e.pointerId);
+      },
+      onPointerUp: (e) => {
+        e.target.releasePointerCapture(e.pointerId);
+      },
+      onClick: (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const duration = Date.now() - downTimeRef.current;
+        if (duration > 200) return; // Held too long = drag, not click
+        onClick();
+      },
       style: {
         width: NUCLEUS_SIZE,
         height: NUCLEUS_SIZE,
@@ -110,10 +124,14 @@
       },
       'aria-label': isOpen ? 'Close cluster' : 'Open cluster',
     }, [
-      React.createElement(Icon, { key: 'icon', name: isOpen ? 'X' : 'Zap', size: 24 }),
+      React.createElement('span', {
+        key: 'icon-wrap',
+        style: { pointerEvents: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }
+      }, React.createElement(Icon, { name: isOpen ? 'X' : 'Zap', size: 24 })),
       pendingCount > 0 && React.createElement('span', {
         key: 'badge',
         className: 'agui-nucleus-badge',
+        style: { pointerEvents: 'none' }
       }, pendingCount),
     ]);
   }
@@ -219,10 +237,28 @@
   function ChatInput({ onSubmit, onClose }) {
     const [value, setValue] = useState('');
     const inputRef = useRef(null);
+    const formRef = useRef(null);
 
     useEffect(() => {
       inputRef.current?.focus();
     }, []);
+
+    // Click outside to minimize
+    useEffect(() => {
+      const handleClickOutside = (e) => {
+        if (formRef.current && !formRef.current.contains(e.target)) {
+          onClose();
+        }
+      };
+      // Small delay to avoid immediate close on the same click that opened it
+      const timer = setTimeout(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+      }, 100);
+      return () => {
+        clearTimeout(timer);
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }, [onClose]);
 
     const handleSubmit = useCallback((e) => {
       e.preventDefault();
@@ -233,6 +269,7 @@
     }, [value, onSubmit]);
 
     return React.createElement('form', {
+      ref: formRef,
       className: 'agui-chat',
       onSubmit: handleSubmit,
     }, [
@@ -302,7 +339,6 @@
       },
     }, [
       React.createElement(Icon, { key: 'icon', name: 'Trash2', size: 24 }),
-      React.createElement('span', { key: 'label' }, 'Drop here to remove'),
     ]);
   }
 
@@ -319,6 +355,21 @@
     const [newElectronId, setNewElectronId] = useState(null);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const clusterRef = useRef(null);
+
+    // Hide dashboard page header for minimalist look
+    useEffect(() => {
+      const header = document.querySelector('header[role="banner"]');
+      if (header) {
+        header.style.display = 'none';
+        console.log('[aGUI] Hiding page header');
+      }
+      return () => {
+        if (header) {
+          header.style.display = '';
+          console.log('[aGUI] Restoring page header');
+        }
+      };
+    }, []);
 
     // Load saved state from localStorage
     useEffect(() => {
@@ -507,15 +558,27 @@
       if (e.target.closest('.agui-electron') || e.target.closest('.agui-satellite')) return;
       const startX = e.clientX - position.x;
       const startY = e.clientY - position.y;
+      const dragStartPos = { x: e.clientX, y: e.clientY };
+      let hasDragged = false;
       setTrashVisible(true);
 
       const handleMouseMove = (ev) => {
+        const dx = ev.clientX - dragStartPos.x;
+        const dy = ev.clientY - dragStartPos.y;
+        if (Math.hypot(dx, dy) > 3) {
+          hasDragged = true;
+        }
         setPosition({ x: ev.clientX - startX, y: ev.clientY - startY });
       };
-      const handleMouseUp = () => {
+      const handleMouseUp = (ev) => {
         setTrashVisible(false);
         window.removeEventListener('mousemove', handleMouseMove);
         window.removeEventListener('mouseup', handleMouseUp);
+        // If we didn't actually drag (just clicked), let the click handler work
+        if (!hasDragged) {
+          // Don't toggle here — let the click event on the nucleus handle it
+          return;
+        }
       };
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleMouseUp);
@@ -609,14 +672,18 @@
   }
 
   // ---------------------------------------------------------------------------
-  // Plugin Registration
+  // Plugin Registration — Hermes Dashboard Plugin SDK v1
   // ---------------------------------------------------------------------------
-  window.__HERMES_PLUGIN_SDK__.register({
-    name: 'agui',
-    render: (props) => {
-      return React.createElement(AtomCluster, props);
-    },
-  });
+  const PLUGINS = window.__HERMES_PLUGINS__;
 
-  console.log('[aGUI] Plugin registered successfully');
+  if (!PLUGINS || typeof PLUGINS.register !== 'function') {
+    console.error('[aGUI] Hermes plugin registry not found (__HERMES_PLUGINS__.register missing)');
+    return;
+  }
+
+  // Register the tab page component
+  PLUGINS.register('agui', AtomCluster);
+  console.log('[aGUI] Plugin registered via __HERMES_PLUGINS__.register()');
+
+  // No slots registered — keeping the page minimalist
 })();
