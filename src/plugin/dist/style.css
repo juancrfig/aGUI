@@ -339,11 +339,11 @@
   border: 2px dashed var(--agui-border);
   color: var(--agui-text);
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: transform 0.15s ease;
 }
 
-.agui-chat__send:hover {
-  transform: scale(1.1);
+.agui-chat__send:active {
+  transform: scale(0.9);
 }
 
 .agui-plus-btn {
