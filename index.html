@@ -18,71 +18,30 @@
       height: 100vh;
     }
   </style>
+  <!-- React CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  
   <!-- Mock Hermes SDK -->
   <script>
     window.__HERMES_PLUGIN_SDK__ = {
-      React: {
-        createElement: function(type, props, ...children) {
-          if (typeof type === 'function') {
-            return type(props);
-          }
-          const el = document.createElement(type);
-          if (props) {
-            Object.keys(props).forEach(k => {
-              if (k === 'className') el.className = props[k];
-              else if (k === 'style' && typeof props[k] === 'object') Object.assign(el.style, props[k]);
-              else if (k.startsWith('on')) el.addEventListener(k.slice(2).toLowerCase(), props[k]);
-              else if (k === 'ref') { /* ignore */ }
-              else if (k === 'dangerouslySetInnerHTML') el.innerHTML = props[k].__html;
-              else if (k === 'key') { /* ignore */ }
-              else el.setAttribute(k, props[k]);
-            });
-          }
-          children.flat().filter(Boolean).forEach(child => {
-            if (typeof child === 'string' || typeof child === 'number') {
-              el.appendChild(document.createTextNode(child));
-            } else if (child instanceof Node) {
-              el.appendChild(child);
-            }
-          });
-          return el;
-        },
-        useState: function(initial) {
-          let state = initial;
-          const setState = (newState) => { state = newState; };
-          return [state, setState];
-        },
-        useEffect: function() {},
-        useCallback: function(fn) { return fn; },
-        useRef: function(initial) { return { current: initial }; },
-        useMemo: function(fn) { return fn(); },
-      },
+      React: window.React,
       hooks: {
-        useState: function(initial) {
-          let state = initial;
-          const setState = (newState) => { state = newState; };
-          return [state, setState];
-        },
-        useEffect: function() {},
-        useCallback: function(fn) { return fn; },
-        useRef: function(initial) { return { current: initial }; },
-        useMemo: function(fn) { return fn(); },
+        useState: window.React.useState,
+        useEffect: window.React.useEffect,
+        useCallback: window.React.useCallback,
+        useRef: window.React.useRef,
+        useMemo: window.React.useMemo,
       },
       components: {
         Button: function(props) {
-          const btn = document.createElement('button');
-          Object.assign(btn, props);
-          return btn;
+          return window.React.createElement('button', props, props.children);
         },
-        Input: function(props) {
-          const input = document.createElement('input');
-          Object.assign(input, props);
-          return input;
-        },
+        Input: window.React.forwardRef(function(props, ref) {
+          return window.React.createElement('input', { ...props, ref });
+        }),
         Badge: function(props) {
-          const span = document.createElement('span');
-          span.textContent = props.children;
-          return span;
+          return window.React.createElement('span', { className: props.className }, props.children);
         },
       },
       utils: {
@@ -96,11 +55,10 @@
     window.__HERMES_PLUGINS__ = {
       register: function(name, component) {
         console.log('[Hermes Mock] Plugin registered:', name);
-        // Render to a mock container
         const root = document.getElementById('root');
-        if (root && typeof component === 'function') {
-          const el = component();
-          if (el instanceof Node) root.appendChild(el);
+        if (root) {
+          const el = window.React.createElement(component);
+          window.ReactDOM.createRoot(root).render(el);
         }
       }
     };
@@ -108,10 +66,10 @@
       navigate: function(path) { console.log('[Hermes Mock] Navigate to:', path); },
     };
   </script>
-  <link rel="stylesheet" href="/dist/style.css">
+  <link rel="stylesheet" href="/src/plugin/dist/style.css">
 </head>
 <body>
   <div id="root"></div>
-  <script src="/dist/index.js"></script>
+  <script src="/src/plugin/dist/index.js"></script>
 </body>
 </html>
