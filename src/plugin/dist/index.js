@@ -393,10 +393,17 @@
       localStorage.setItem('agui-state', JSON.stringify(state));
     }, [electrons, satellites, position]);
 
-    // Click outside to close atom
+    // Click outside to close atom (ignore clicks on electrons/trash/chat)
     useEffect(() => {
       if (!isOpen) return;
       const handleClickOutside = (e) => {
+        // Don't close if clicking on electrons, trash, chat, or satellites
+        if (e.target.closest('.agui-electron') ||
+            e.target.closest('.agui-trash') ||
+            e.target.closest('.agui-chat-wrap') ||
+            e.target.closest('.agui-satellite')) {
+          return;
+        }
         if (clusterRef.current && !clusterRef.current.contains(e.target)) {
           setIsOpen(false);
           setShowChat(false);
