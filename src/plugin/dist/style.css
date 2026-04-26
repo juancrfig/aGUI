@@ -14,7 +14,7 @@
   --agui-text: var(--foreground, #ffe6cb);
   --agui-text-muted: var(--muted-foreground, #94a3b8);
   --agui-border: var(--border, rgba(255, 230, 203, 0.1));
-  --agui-destructive: var(--destructive, #ef4444);
+  --agui-destructive: var(--color-destructive, #ef4444);
   --agui-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   --agui-glass: rgba(4, 28, 28, 0.75);
 
@@ -474,14 +474,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
   color: var(--agui-destructive);
-  font-size: 13px;
-  font-weight: 500;
   z-index: 9996;
   opacity: 0;
   pointer-events: none;
-  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: bottom 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* Visible when atom is open */
@@ -490,20 +487,15 @@
   pointer-events: auto;
 }
 
-/* Hover: slide up to fully reveal */
+/* Hover: slide up to fully reveal — keep dashed border */
 .agui-trash:hover,
 .agui-trash:focus-within {
   bottom: 0;
-  border-style: solid;
-  box-shadow: 0 -4px 24px rgba(239, 68, 68, 0.12);
 }
 
-/* Drag-over state: highlight */
+/* Drag-over state: slide up, keep dashed border */
 .agui-trash--active {
   bottom: 0;
-  border-style: solid;
-  background: rgba(239, 68, 68, 0.06);
-  box-shadow: 0 -4px 32px rgba(239, 68, 68, 0.2);
 }
 
 /* ---------------------------------------------------------------------------

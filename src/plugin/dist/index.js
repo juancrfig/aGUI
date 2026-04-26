@@ -345,7 +345,6 @@
       },
     }, [
       React.createElement(Icon, { key: 'icon', name: 'Trash2', size: 20 }),
-      React.createElement('span', { key: 'label' }, 'Drop to remove'),
     ]);
   }
 
