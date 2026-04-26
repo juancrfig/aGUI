@@ -103,6 +103,57 @@ eventSource.onmessage = (event) => {
 
 ---
 
+## Testing (Visual + Functional)
+
+### Functional Tests
+
+```javascript
+1. test_sse_connection:
+   - Assert: new EventSource('/api/plugins/agui/notifications') connects
+   - Assert: onopen fires within 2s
+
+2. test_task_complete_notification:
+   - Trigger: Backend sends {type: "task_complete", title: "Done", message: "Task finished"}
+   - Assert: Notification appears in trail
+   - Assert: Has green border (success color)
+   - Assert: Auto-dismisses after 5s
+
+3. test_error_notification:
+   - Trigger: Backend sends {type: "error", message: "Connection failed"}
+   - Assert: Notification appears with red border
+   - Assert: Persists for 8s
+
+4. test_hover_pause:
+   - Action: Hover over notification at 4s
+   - Assert: Timer paused (notification still visible at 6s)
+   - Action: Mouse leave
+   - Assert: Dismisses within 1s
+
+5. test_max_stack:
+   - Trigger: Send 5 notifications rapidly
+   - Assert: Only 3 visible
+   - Assert: Older ones hidden or stacked with opacity
+```
+
+### Visual Tests (Browser Tools)
+
+1. **test_notification_appearance**:
+   - Trigger task_complete notification
+   - Screenshot
+   - Assert: Pill shape, glassmorphism, green glow
+   - Assert: Icon + title + message + action button
+
+2. **test_stack_layout**:
+   - Trigger 3 notifications
+   - Screenshot
+   - Assert: 8px gap between them
+   - Assert: Centered horizontally
+
+3. **test_dismiss_animation**:
+   - Wait for auto-dismiss
+   - Record/screenshot sequence
+   - Assert: Slides up + fades out smoothly
+
 ## Acceptance Criteria
 
 - [ ] Connects to SSE stream and receives events
@@ -114,6 +165,8 @@ eventSource.onmessage = (event) => {
 - [ ] Task completion = green, Error = red
 - [ ] Uses theme CSS variables
 - [ ] Doesn't block dashboard interactions (pointer-events: none on container)
+- [ ] **Visual tests pass (screenshots verified)**
+- [ ] **Functional tests pass (assertions verified)**
 
 ---
 
@@ -130,3 +183,4 @@ eventSource.onmessage = (event) => {
 - For the stack layout, use CSS `transform: translateY()` with staggered delays
 - Consider a "Do not disturb" mode (future feature) — store in localStorage
 - Error notifications should have higher z-index than task completions
+- **Browser tools REQUIRED for visual verification**

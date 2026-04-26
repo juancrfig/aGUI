@@ -102,6 +102,78 @@ function getElectronPosition(ringIndex, indexInRing, totalInRing) {
 
 ---
 
+## Testing (Visual + Functional)
+
+This is a visual component. TDD applies to behavior, not pixels. Test the behavior:
+
+### Functional Tests (Jest-like, in JS)
+
+```javascript
+// tests/cluster.test.js (run with node + jsdom or in browser)
+// These are assertions you verify with browser tools
+
+1. test_nucleus_renders:
+   - Assert: document.querySelector('.agui-nucleus') exists
+   - Assert: innerHTML contains bolt icon (Zap)
+
+2. test_click_toggles_state:
+   - Action: click nucleus
+   - Assert: cluster has class 'open'
+   - Assert: electrons are visible (opacity > 0)
+   - Action: click nucleus again
+   - Assert: cluster has class 'closed'
+   - Assert: electrons are hidden (opacity = 0)
+
+3. test_electron_count:
+   - Assert: document.querySelectorAll('.agui-electron').length === 5
+
+4. test_electron_navigation:
+   - Action: click electron[data-type="cron"]
+   - Assert: window.location.hash or dashboard navigates to /cron
+
+5. test_drag_position_persists:
+   - Action: drag cluster to (500, 500)
+   - Assert: localStorage.getItem('agui-cluster-position') === '{"x":500,"y":500}'
+   - Reload page
+   - Assert: cluster is at (500, 500)
+```
+
+### Visual Tests (Browser Tools — CRITICAL)
+
+Use `browser_navigate`, `browser_vision`, `browser_snapshot` to verify:
+
+1. **test_closed_state_looks_correct**:
+   - Navigate to dashboard with plugin loaded
+   - Screenshot
+   - Assert: Single bolt button visible, bottom-right
+   - Assert: No electrons visible
+
+2. **test_opened_state_looks_correct**:
+   - Click nucleus
+   - Screenshot
+   - Assert: 5 electrons visible in rings
+   - Assert: No orbit lines
+   - Assert: Colors match semantic mapping
+
+3. **test_animation_smoothness**:
+   - Record interaction (or take screenshots at 100ms intervals)
+   - Assert: No jank, 60fps
+
+4. **test_theme_adaptation**:
+   - Switch dashboard theme to Midnight
+   - Screenshot cluster
+   - Assert: Colors adapt (glow changes)
+
+### Run Visual Tests
+
+```bash
+# Ensure dashboard is running
+hermes dashboard &
+
+# Use browser tools to navigate and screenshot
+# Verify each state visually
+```
+
 ## Acceptance Criteria
 
 - [ ] Nucleus button renders with bolt icon
@@ -114,6 +186,8 @@ function getElectronPosition(ringIndex, indexInRing, totalInRing) {
 - [ ] No orbit path lines visible
 - [ ] Uses CSS custom properties for theming
 - [ ] GPU-accelerated animations only (transform, opacity)
+- [ ] **Visual tests pass (screenshots verified)**
+- [ ] **Functional tests pass (assertions verified)**
 
 ---
 
@@ -132,6 +206,7 @@ function getElectronPosition(ringIndex, indexInRing, totalInRing) {
 - For the spiral motion, use CSS `@keyframes` with `transform: translate()` + `scale()`
 - The cluster should have `pointer-events: none` on the container, `pointer-events: auto` on buttons
 - z-index: 9999 (above dashboard content)
+- **Browser tools are REQUIRED for visual verification** — the agent must take screenshots and verify them
 
 ---
 

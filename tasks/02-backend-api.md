@@ -96,6 +96,52 @@ See `AGENTS.md` § "Backend API" for constraints.
 
 ---
 
+## Testing (TDD — Strict)
+
+Follow the `test-driven-development` skill. RED-GREEN-REFACTOR for every route.
+
+### Test Setup
+
+Use `pytest` + `httpx` for async FastAPI testing:
+
+```python
+# tests/test_plugin_api.py
+import pytest
+from httpx import AsyncClient
+from src.plugin.plugin_api import router
+from fastapi import FastAPI
+
+app = FastAPI()
+app.include_router(router, prefix="/api/plugins/agui")
+
+@pytest.fixture
+async def client():
+    async with AsyncClient(app=app, base_url="http://test") as c:
+        yield c
+```
+
+### Test Cases (write these FIRST, watch them fail, then implement)
+
+1. **test_chat_navigate** — POST /chat with "show cron jobs" → returns navigate action
+2. **test_chat_github_issue** — POST /chat with "add dark mode" → returns github_issue action
+3. **test_chat_info** — POST /chat with "hello" → returns info action
+4. **test_notifications_stream** — GET /notifications returns SSE stream with correct content-type
+5. **test_github_draft_url** — POST /github-draft returns properly encoded URL
+6. **test_intent_mapping_coverage** — All 6 dashboard tabs are covered by keywords
+
+### Run Tests
+
+```bash
+# RED — verify failure
+pytest tests/test_plugin_api.py::test_chat_navigate -v
+
+# GREEN — verify pass
+pytest tests/test_plugin_api.py::test_chat_navigate -v
+
+# Full suite
+pytest tests/ -q
+```
+
 ## Acceptance Criteria
 
 - [ ] `router = APIRouter()` exported at module level
@@ -103,6 +149,8 @@ See `AGENTS.md` § "Backend API" for constraints.
 - [ ] SSE stream works (test with `curl -N`)
 - [ ] Intent mapping covers all dashboard tabs
 - [ ] GitHub issue URL is properly URL-encoded
+- [ ] **Every route has a test that failed first**
+- [ ] **All tests pass**
 - [ ] File committed to repo
 
 ---
@@ -124,3 +172,7 @@ See `AGENTS.md` § "Backend API" for constraints.
   - "config", "setting", "preference" → `/config`
   - "log", "history" → `/logs`
   - "analytics", "stats", "metric" → `/analytics`
+- **Use browser tools to visually verify** the API works:
+  - Navigate to `http://127.0.0.1:9119/api/plugins/agui/chat` in headless browser
+  - Take screenshot of response
+  - Verify SSE stream renders events correctly

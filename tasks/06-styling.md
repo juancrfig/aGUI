@@ -343,6 +343,57 @@ File: `src/plugin/dist/style.css`
 
 ---
 
+## Testing (Visual + CSS Validation)
+
+### CSS Validation Tests
+
+```bash
+1. test_css_valid:
+   - Run: `npx stylelint src/plugin/dist/style.css` (or online validator)
+   - Assert: No syntax errors
+
+2. test_variables_defined:
+   - Script: Extract all `--agui-*` variables from CSS
+   - Assert: All 15 semantic variables present
+   - Assert: All have fallback values
+
+3. test_responsive:
+   - Script: Check for `@media` queries or responsive units
+   - Assert: Has mobile breakpoint or fluid sizing
+
+4. test_reduced_motion:
+   - Script: Check for `prefers-reduced-motion` media query
+   - Assert: Disables animations for accessibility
+```
+
+### Visual Tests (Browser Tools)
+
+1. **test_nucleus_glow**:
+   - Screenshot nucleus on Hermes Teal theme
+   - Assert: Glow matches `--primary` color
+   - Switch to Midnight theme
+   - Screenshot
+   - Assert: Glow changes to match new `--primary`
+
+2. **test_glassmorphism**:
+   - Screenshot cluster
+   - Assert: Backdrop blur visible (not solid opaque)
+   - Assert: Subtle border present
+
+3. **test_animation_60fps**:
+   - Open cluster
+   - Use browser devtools Performance tab (or visual assessment)
+   - Assert: No jank, smooth 60fps
+
+4. **test_electron_glows**:
+   - Screenshot each electron type
+   - Assert: Sessions = purple, Config = amber, Skills = green, Cron = orange, Logs = blue
+
+5. **test_notification_glows**:
+   - Trigger task_complete and error notifications
+   - Screenshot
+   - Assert: Success = green border glow, Error = red border glow
+
 ## Acceptance Criteria
 
 - [ ] All CSS variables defined with fallbacks
@@ -354,6 +405,8 @@ File: `src/plugin/dist/style.css`
 - [ ] All animations use GPU-accelerated properties
 - [ ] Responsive (works on mobile widths)
 - [ ] Respects `prefers-reduced-motion` (disable animations)
+- [ ] **Visual tests pass (screenshots verified)**
+- [ ] **CSS validation passes**
 
 ---
 
@@ -379,3 +432,4 @@ File: `src/plugin/dist/style.css`
   }
   ```
 - Test on both light and dark themes (if dashboard supports light mode)
+- **Browser tools REQUIRED for visual verification**

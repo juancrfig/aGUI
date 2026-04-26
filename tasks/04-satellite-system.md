@@ -86,6 +86,55 @@ File: `src/plugin/dist/index.js` (satellite section)
 
 ---
 
+## Testing (Visual + Functional)
+
+### Functional Tests
+
+```javascript
+1. test_promotion_trigger:
+   - Setup: Add 8 electrons to cluster
+   - Assert: 7th electron is promoted to satellite
+   - Assert: Satellite appears with correct icon/label
+
+2. test_demotion_drag:
+   - Action: Drag satellite within 100px of nucleus
+   - Assert: Nucleus glows brighter (feedback class)
+   - Action: Release
+   - Assert: Satellite disappears
+   - Assert: Electron reappears in cluster
+
+3. test_trash_restore:
+   - Action: Close satellite (trash it)
+   - Assert: Satellite hidden, trash count +1
+   - Action: Open trash, click restore
+   - Assert: Satellite back as electron
+
+4. test_position_persist:
+   - Action: Drag satellite to (300, 400)
+   - Assert: localStorage has position
+   - Reload
+   - Assert: Satellite at (300, 400)
+```
+
+### Visual Tests (Browser Tools)
+
+1. **test_satellite_appearance**:
+   - Screenshot satellite
+   - Assert: Glassmorphism panel, correct glow color
+   - Assert: Title bar with icon + label + close button
+
+2. **test_drag_feedback**:
+   - Drag satellite near nucleus
+   - Screenshot
+   - Assert: Nucleus glows brighter
+   - Assert: Satellite has 'dragging' style
+
+3. **test_trash_ui**:
+   - Trash a satellite
+   - Screenshot
+   - Assert: Trash icon appears near cluster
+   - Assert: Badge shows count
+
 ## Acceptance Criteria
 
 - [ ] Satellites render as draggable mini-panels
@@ -95,6 +144,8 @@ File: `src/plugin/dist/index.js` (satellite section)
 - [ ] Trash system works (restore + permanent delete)
 - [ ] Animations are smooth (300-400ms, ease-out)
 - [ ] Satellites use theme CSS variables
+- [ ] **Visual tests pass (screenshots verified)**
+- [ ] **Functional tests pass (assertions verified)**
 
 ---
 
@@ -118,3 +169,4 @@ File: `src/plugin/dist/index.js` (satellite section)
     // ... mouse/touch event handlers
   }
   ```
+- **Browser tools REQUIRED for visual verification**

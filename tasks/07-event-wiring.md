@@ -134,6 +134,84 @@ function useNotifications() {
 
 ---
 
+## Testing (Integration + End-to-End)
+
+### Integration Tests
+
+```python
+# tests/test_event_wiring.py
+import pytest
+from httpx import AsyncClient
+
+@pytest.mark.asyncio
+async def test_sse_receives_task_complete():
+    """End-to-end: Backend event → SSE → Frontend notification"""
+    async with AsyncClient() as client:
+        # Start SSE connection
+        async with client.stream('GET', '/api/plugins/agui/notifications') as response:
+            assert response.headers['content-type'] == 'text/event-stream'
+            
+            # Trigger a task completion (mock or real)
+            await client.post('/api/test/trigger-task-complete')
+            
+            # Read event from stream
+            line = await response.aread()
+            assert b'task_complete' in line
+
+@pytest.mark.asyncio
+async def test_sse_receives_error():
+    """End-to-end: Backend error → SSE → Frontend notification"""
+    async with AsyncClient() as client:
+        async with client.stream('GET', '/api/plugins/agui/notifications') as response:
+            await client.post('/api/test/trigger-error')
+            line = await response.aread()
+            assert b'error' in line
+            assert b'message' in line
+```
+
+### End-to-End Visual Test (Browser Tools)
+
+```javascript
+1. test_full_flow:
+   - Setup: Dashboard running, aGUI loaded
+   - Action: Trigger a task completion in Hermes (run a quick command)
+   - Assert: Notification appears in trail within 10s
+   - Assert: Notification has correct type, title, message
+   - Screenshot for verification
+
+2. test_reconnection:
+   - Action: Kill SSE connection (simulate network drop)
+   - Assert: Frontend reconnects within 3s
+   - Assert: Notifications resume
+```
+
+### Backend Polling Tests
+
+```python
+@pytest.mark.asyncio
+async def test_poll_sessions_detects_completion():
+    """Test that session polling detects status changes"""
+    # Mock session data
+    previous = {"sess-1": "running"}
+    current = {"sess-1": "completed"}
+    
+    events = detect_changes(previous, current)
+    assert len(events) == 1
+    assert events[0]["type"] == "task_complete"
+    assert events[0]["task_id"] == "sess-1"
+
+@pytest.mark.asyncio
+async def test_poll_errors_detects_new_errors():
+    """Test that error polling detects new log entries"""
+    previous_logs = []
+    current_logs = [{"message": "Connection failed", "source": "gateway"}]
+    
+    events = detect_new_errors(previous_logs, current_logs)
+    assert len(events) == 1
+    assert events[0]["type"] == "error"
+    assert "Connection failed" in events[0]["message"]
+```
+
 ## Acceptance Criteria
 
 - [ ] SSE stream connects and stays alive
@@ -142,6 +220,8 @@ function useNotifications() {
 - [ ] Reconnection works after disconnect
 - [ ] No memory leaks (EventSource cleaned up on unmount)
 - [ ] Polling doesn't overwhelm the backend (5s interval)
+- [ ] **Integration tests pass**
+- [ ] **End-to-end visual test passes (screenshot verified)**
 
 ---
 
@@ -162,3 +242,4 @@ function useNotifications() {
   yield ":heartbeat\n\n"  # Every 15 seconds
   ```
 - Use `asyncio.create_task()` to run polling loops in background
+- **Browser tools REQUIRED for end-to-end verification**

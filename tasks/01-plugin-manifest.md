@@ -51,12 +51,22 @@ See `AGENTS.md` § "Plugin Manifest Reference" for full schema.
 
 ---
 
+## Testing (TDD)
+
+This task is a configuration file, not code. TDD in the strict sense doesn't apply. However, verify the manifest works:
+
+1. Write a validation script that checks the JSON against the schema
+2. Run it: `python -c "import json; m=json.load(open('src/plugin/manifest.json')); assert all(k in m for k in ['name','label','entry'])"`
+3. Verify the dashboard picks it up: `curl -s http://127.0.0.1:9119/api/dashboard/plugins | grep -q agui`
+
 ## Acceptance Criteria
 
 - [ ] Valid JSON, no syntax errors
 - [ ] All required fields present
 - [ ] `name` is unique (not conflicting with existing plugins)
 - [ ] `slots` are valid slot identifiers
+- [ ] Validation script passes
+- [ ] Dashboard picks up the plugin (verify via curl or browser)
 - [ ] File committed to repo
 
 ---
