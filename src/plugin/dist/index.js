@@ -325,20 +325,27 @@
   }
 
   // ---------------------------------------------------------------------------
-  // Trash Zone (drop to delete)
+  // Trash Zone (peeking bar — visible when atom is open)
   // ---------------------------------------------------------------------------
-  function TrashZone({ visible, onDrop }) {
-    if (!visible) return null;
+  function TrashZone({ onDrop }) {
+    const [isActive, setIsActive] = React.useState(false);
+
     return React.createElement('div', {
-      className: 'agui-trash',
-      onDragOver: (e) => e.preventDefault(),
+      className: cn('agui-trash', isActive && 'agui-trash--active'),
+      onDragOver: (e) => {
+        e.preventDefault();
+        setIsActive(true);
+      },
+      onDragLeave: () => setIsActive(false),
       onDrop: (e) => {
         e.preventDefault();
+        setIsActive(false);
         const id = e.dataTransfer?.getData('text/plain');
         if (id) onDrop(id);
       },
     }, [
-      React.createElement(Icon, { key: 'icon', name: 'Trash2', size: 24 }),
+      React.createElement(Icon, { key: 'icon', name: 'Trash2', size: 20 }),
+      React.createElement('span', { key: 'label' }, 'Drop to remove'),
     ]);
   }
 
@@ -351,7 +358,6 @@
     const [electrons, setElectrons] = useState(SEED_ELECTRONS);
     const [satellites, setSatellites] = useState([]);
     const [notifications, setNotifications] = useState([]);
-    const [trashVisible, setTrashVisible] = useState(false);
     const [newElectronId, setNewElectronId] = useState(null);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const clusterRef = useRef(null);
@@ -560,7 +566,6 @@
       const startY = e.clientY - position.y;
       const dragStartPos = { x: e.clientX, y: e.clientY };
       let hasDragged = false;
-      setTrashVisible(true);
 
       const handleMouseMove = (ev) => {
         const dx = ev.clientX - dragStartPos.x;
@@ -571,7 +576,6 @@
         setPosition({ x: ev.clientX - startX, y: ev.clientY - startY });
       };
       const handleMouseUp = (ev) => {
-        setTrashVisible(false);
         window.removeEventListener('mousemove', handleMouseMove);
         window.removeEventListener('mouseup', handleMouseUp);
         // If we didn't actually drag (just clicked), let the click handler work
@@ -594,10 +598,9 @@
         onDismiss: handleDismissNotification,
       }),
 
-      // Trash zone
+      // Trash zone (peeking bar — visible via CSS when atom is open)
       React.createElement(TrashZone, {
         key: 'trash',
-        visible: trashVisible,
         onDrop: handleRemoveElectron,
       }),
 

@@ -14,6 +14,7 @@
   --agui-text: var(--foreground, #ffe6cb);
   --agui-text-muted: var(--muted-foreground, #94a3b8);
   --agui-border: var(--border, rgba(255, 230, 203, 0.1));
+  --agui-destructive: var(--destructive, #ef4444);
   --agui-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   --agui-glass: rgba(4, 28, 28, 0.75);
 
@@ -453,37 +454,56 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Trash Zone
+   Trash Zone — Peeking bar from bottom edge
    --------------------------------------------------------------------------- */
 .agui-trash {
+  --agui-trash-height: 60px;
+  --agui-trash-peek: 12px;   /* ~20% of 60px peeking out */
+  --agui-trash-width: 200px;
+
   position: fixed;
-  bottom: 24px;
+  bottom: calc(var(--agui-trash-peek) - var(--agui-trash-height));
   left: 50%;
   transform: translateX(-50%);
-  padding: 16px 32px;
-  border-radius: 16px;
-  background: rgba(239, 68, 68, 0.15);
-  backdrop-filter: blur(12px);
-  border: 2px dashed rgba(239, 68, 68, 0.4);
+  width: var(--agui-trash-width);
+  height: var(--agui-trash-height);
+  border-radius: 12px 12px 0 0;
+  background: transparent;
+  border: 2px dashed var(--agui-destructive);
+  border-bottom: none;
   display: flex;
   align-items: center;
-  gap: 10px;
-  color: #ef4444;
-  font-size: 14px;
+  justify-content: center;
+  gap: 8px;
+  color: var(--agui-destructive);
+  font-size: 13px;
   font-weight: 500;
   z-index: 9996;
-  animation: agui-trash-appear 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-@keyframes agui-trash-appear {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
+/* Visible when atom is open */
+.agui-root:has(.agui-cluster--open) .agui-trash {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Hover: slide up to fully reveal */
+.agui-trash:hover,
+.agui-trash:focus-within {
+  bottom: 0;
+  border-style: solid;
+  box-shadow: 0 -4px 24px rgba(239, 68, 68, 0.12);
+}
+
+/* Drag-over state: highlight */
+.agui-trash--active {
+  bottom: 0;
+  border-style: solid;
+  background: rgba(239, 68, 68, 0.06);
+  box-shadow: 0 -4px 32px rgba(239, 68, 68, 0.2);
 }
 
 /* ---------------------------------------------------------------------------
