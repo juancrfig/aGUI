@@ -343,9 +343,7 @@
         const id = e.dataTransfer?.getData('text/plain');
         if (id) onDrop(id);
       },
-    }, [
-      React.createElement(Icon, { key: 'icon', name: 'Trash2', size: 20 }),
-    ]);
+    });
   }
 
   // ---------------------------------------------------------------------------
