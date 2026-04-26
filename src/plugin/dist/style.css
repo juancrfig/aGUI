@@ -490,17 +490,15 @@
   pointer-events: auto;
 }
 
-/* Hover: slide up to fully reveal — keep dashed border, add semantic shadow */
+/* Hover: slide up to fully reveal — keep dashed border */
 .agui-trash:hover,
 .agui-trash:focus-within {
   bottom: 0;
-  box-shadow: 0 -4px 24px var(--agui-trash-glow);
 }
 
-/* Drag-over state: slide up, keep dashed border, stronger semantic shadow */
+/* Drag-over state: slide up, keep dashed border */
 .agui-trash--active {
   bottom: 0;
-  box-shadow: 0 -4px 32px var(--agui-trash-glow);
 }
 
 /* ---------------------------------------------------------------------------
