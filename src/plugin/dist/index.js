@@ -98,15 +98,6 @@
   // ---------------------------------------------------------------------------
   function Nucleus({ isOpen, onClick, pendingCount }) {
     const downTimeRef = useRef(0);
-    const [showIcon, setShowIcon] = React.useState(true);
-
-    // Smooth icon swap: fade out, swap, fade in
-    React.useEffect(() => {
-      setShowIcon(false);
-      const timer = setTimeout(() => setShowIcon(true), 150);
-      return () => clearTimeout(timer);
-    }, [isOpen]);
-
     return React.createElement('button', {
       className: cn(
         'agui-nucleus',
@@ -133,17 +124,6 @@
       },
       'aria-label': isOpen ? 'Close cluster' : 'Open cluster',
     }, [
-      React.createElement('span', {
-        key: 'icon-wrap',
-        style: {
-          pointerEvents: 'none',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          opacity: showIcon ? 1 : 0,
-          transition: 'opacity 0.15s ease',
-        }
-      }, showIcon && React.createElement(Icon, { name: isOpen ? 'X' : 'Zap', size: 24 })),
       pendingCount > 0 && React.createElement('span', {
         key: 'badge',
         className: 'agui-nucleus-badge',
