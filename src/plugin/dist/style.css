@@ -320,6 +320,7 @@
 
 .agui-chat__input::placeholder {
   color: var(--agui-text-muted);
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
 }
 
 .agui-chat__input:focus {
