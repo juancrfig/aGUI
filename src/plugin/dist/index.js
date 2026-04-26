@@ -376,14 +376,14 @@
       try {
         const saved = localStorage.getItem('agui-state');
         const savedVersion = localStorage.getItem('agui-version');
-        if (saved && savedVersion === '1.1.3') {
+        if (saved && savedVersion === '1.1.4') {
           const state = JSON.parse(saved);
           if (state.electrons) setElectrons(state.electrons);
           if (state.satellites) setSatellites(state.satellites);
           if (state.position) setPosition(state.position);
         } else {
           // Version mismatch or first run — use fresh seed electrons
-          localStorage.setItem('agui-version', '1.1.3');
+          localStorage.setItem('agui-version', '1.1.4');
           localStorage.setItem('agui-state', JSON.stringify({
             electrons: SEED_ELECTRONS,
             satellites: [],
@@ -399,7 +399,7 @@
     useEffect(() => {
       const state = { electrons, satellites, position };
       localStorage.setItem('agui-state', JSON.stringify(state));
-      localStorage.setItem('agui-version', '1.1.3');
+      localStorage.setItem('agui-version', '1.1.4');
     }, [electrons, satellites, position]);
 
     // Click outside to close atom (ignore clicks on electrons/trash/chat)
@@ -701,6 +701,18 @@
   // ---------------------------------------------------------------------------
   // Plugin Registration — Hermes Dashboard Plugin SDK v1
   // ---------------------------------------------------------------------------
+  // Force CSS refresh by appending a dynamic timestamp link
+  (function forceCSSRefresh() {
+    const existing = document.getElementById('agui-style');
+    if (existing) existing.remove();
+    const link = document.createElement('link');
+    link.id = 'agui-style';
+    link.rel = 'stylesheet';
+    link.href = '/api/plugins/agui/dist/style.css?t=' + Date.now();
+    document.head.appendChild(link);
+    console.log('[aGUI] CSS refreshed with timestamp');
+  })();
+
   const PLUGINS = window.__HERMES_PLUGINS__;
 
   if (!PLUGINS || typeof PLUGINS.register !== 'function') {

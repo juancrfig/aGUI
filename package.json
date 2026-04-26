@@ -1,0 +1,32 @@
+{
+  "name": "agui",
+  "version": "1.0.0",
+  "description": "> A dashboard plugin/theme for the Hermes Agent web dashboard. > Built for the Hermes Dashboard Hackathon (April 2026).",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juancrfig/aGUI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/juancrfig/aGUI/issues"
+  },
+  "homepage": "https://github.com/juancrfig/aGUI#readme",
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.10"
+  }
+}
